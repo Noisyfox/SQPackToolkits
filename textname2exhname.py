@@ -4,6 +4,14 @@
 # ===============================================================
 import re
 
+from ffxiv_crc import compute_crc
+
+
+def name2hash(name):
+    crc = compute_crc(bytearray(name.lower()))
+    return format(crc, '04x')
+
+
 if __name__ == '__main__':
     with open('workspace/text_names.txt', 'r') as f:
         TEXTs = f.readlines()
@@ -27,14 +35,16 @@ if __name__ == '__main__':
                 print "Can't parse name %s" % t
 
         if base_name:
-            exh_set.add('%s.exh\n' % base_name)
-            exh_set.add('%s_0_de.exd\n' % base_name)
-            exh_set.add('%s_0_en.exd\n' % base_name)
-            exh_set.add('%s_0_fr.exd\n' % base_name)
-            exh_set.add('%s_0_ja.exd\n' % base_name)
+            exh_set.add('%s.exh' % base_name)
+            exh_set.add('%s_0_de.exd' % base_name)
+            exh_set.add('%s_0_en.exd' % base_name)
+            exh_set.add('%s_0_fr.exd' % base_name)
+            exh_set.add('%s_0_ja.exd' % base_name)
 
     exh_list = list(exh_set)
     exh_list.sort()
 
     with open('workspace/exh_names.txt', 'w') as f:
-        f.writelines(exh_list)
+        for n in exh_list:
+            h = name2hash(n)
+            f.write("%s %s\n" % (n, h))
