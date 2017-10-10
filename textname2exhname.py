@@ -40,6 +40,7 @@ if __name__ == '__main__':
             exh_set.add('%s_0_en.exd' % base_name)
             exh_set.add('%s_0_fr.exd' % base_name)
             exh_set.add('%s_0_ja.exd' % base_name)
+            exh_set.add('%s_0_chs.exd' % base_name)
 
     exh_list = list(exh_set)
     exh_list.sort()
