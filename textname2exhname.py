@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # ===============================================================
 # This script read TEXT_XXXX from workspace/text_names.txt,
 # and generate exh & exd names.
@@ -8,7 +10,7 @@ from ffxiv_crc import compute_crc
 
 
 def name2hash(name):
-    crc = compute_crc(bytearray(name.lower()))
+    crc = compute_crc(bytearray(name.lower(), encoding='ascii'))
     return format(crc, '04x')
 
 
@@ -32,7 +34,7 @@ if __name__ == '__main__':
                 base_name = m.group(1).lower()
             else:
                 base_name = None
-                print "Can't parse name %s" % t
+                print("Can't parse name %s" % t)
 
         if base_name:
             exh_set.add('%s.exh' % base_name)

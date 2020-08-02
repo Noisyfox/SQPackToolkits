@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 __all__ = ['compute_crc']
 
 import struct
@@ -128,9 +130,9 @@ crc_table_0f091d0 = [
 
 
 # Unsigned CRC
-def compute_crc(bytes, offset=0, length=-1):
+def compute_crc(bytes_in: bytearray, offset=0, length=-1):
     if length < 0:
-        length = len(bytes)
+        length = len(bytes_in)
 
     if length < 4:
         running_length = 0
@@ -140,29 +142,29 @@ def compute_crc(bytes, offset=0, length=-1):
     dw_crc = 0xFFFFFFFF
 
     end_unaligned_bytes = length - running_length
-    for i in xrange(0, running_length, 4):
-        b = struct.unpack_from('<I', bytes, offset + i)[0]
+    for i in range(0, running_length, 4):
+        b = struct.unpack_from('<I', bytes_in, offset + i)[0]
         dw_crc ^= b
         dw_crc = crc_table_0f091d0[dw_crc & 0x000000FF] ^ \
                  crc_table_0f08dd0[(dw_crc >> 8) & 0x000000FF] ^ \
                  crc_table_0f089d0[(dw_crc >> 16) & 0x000000FF] ^ \
                  crc_table_0f085d0[(dw_crc >> 24) & 0x000000FF]
 
-    for i in xrange(0, end_unaligned_bytes):
-        dw_crc = crc_table_0f085d0[(dw_crc ^ bytes[i + offset + running_length]) & 0x000000FF] ^ (dw_crc >> 8)
+    for i in range(0, end_unaligned_bytes):
+        dw_crc = crc_table_0f085d0[(dw_crc ^ bytes_in[i + offset + running_length]) & 0x000000FF] ^ (dw_crc >> 8)
 
     return dw_crc
 
 
 if __name__ == '__main__':
-    files = ['axis_12.fdt']
+    files = ['exd/quest/038', 'game_script/quest/038', 'exd/quest/040']
 
     for f in files:
-        crc = compute_crc(bytearray(f.lower()))
+        crc = compute_crc(bytearray(f.lower(), encoding='ascii'))
         crc_hex = format(crc, '04x')
         signed = struct.unpack_from('<i', struct.pack('<I', crc))[0]
 
-        print "File Name: %s" % f
-        print "Signed int: %d" % signed
-        print "Hex: %s" % crc_hex
-        print "Unsigned int: %s" % crc
+        print("File Name: %s" % f)
+        print("Signed int: %d" % signed)
+        print("Hex: %s" % crc_hex)
+        print("Unsigned int: %s" % crc)

@@ -1,4 +1,4 @@
 # SQPackToolkits
 A set of small tools for manipulating sqpacks
 
-python 2.7 compatible
+python 3.6 compatible

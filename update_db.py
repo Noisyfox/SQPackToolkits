@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # ======================================================================
 # This script read file names and hashes from workspace/exh_names.txt,
 # and update workspace/hashlist.db
@@ -21,7 +23,7 @@ if __name__ == '__main__':
         for n, h in name_hash:
             v = db.execute('SELECT * FROM filenames WHERE hash=?', (h,)).fetchone()
             if v:
-                print "Find!"
+                print("Find!")
             else:
                 r = db.execute("INSERT INTO filenames (hash, name, archive, version) VALUES (?,?,?,1)", (h, n, '-1'))
                 pass
